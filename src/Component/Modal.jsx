@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
-const TagModal = ({ isOpen, closeModal, children, modalRef}) => {
+const Modal = ({ isOpen, closeModal, children, modalRef}) => {
+  // console.log(isOpen)
   const modalClasses = isOpen
     ? "fixed inset-0 flex items-center justify-center z-50"
     : "hidden";
@@ -10,7 +11,7 @@ const TagModal = ({ isOpen, closeModal, children, modalRef}) => {
       <div className="fixed inset-0 bg-black opacity-50"></div>
       <div
         ref={modalRef}
-        className="bg-white rounded-lg px-6 py-3 z-10 w-[50%] h-[40%] flex flex-col"
+        className="bg-white rounded-lg px-4 md:px-6 py-3 z-10 w-[90%] md:w-[50%] h-[35%] md:h-[40%] flex flex-col"
       >
         <div className="flex flex-row justify-end">
           <button
@@ -26,4 +27,4 @@ const TagModal = ({ isOpen, closeModal, children, modalRef}) => {
   );
 };
 
-export default TagModal;
+export default Modal;
