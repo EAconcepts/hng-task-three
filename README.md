@@ -1,8 +1,8 @@
-HNGx Stage Three Task
+HNGx Stage Three Task - 
 Gallery App with drag and drop functionality
 
-Users can view images and search for images using their tag names
-Only authorized users (logged-in users) can re-arrange (using drag and drop), add and edit image tags
+Users can view images and search for images using their tag names, 
+Only authorized users (logged-in users) can re-arrange (using drag and drop), add and edit image tags.
 
 Run 'npm install' to set up the project
 Run 'npm run dev' to start the localhost server
