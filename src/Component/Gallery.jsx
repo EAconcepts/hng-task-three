@@ -1,10 +1,6 @@
 import React, { useRef } from "react";
 import { useState } from "react";
 import Reorder, {
-  reorder,
-  reorderImmutable,
-  reorderFromTo,
-  reorderFromToImmutable,
 } from "react-reorder";
 import PuffLoader from "react-spinners/PuffLoader";
 import { toast, ToastContainer } from "react-toastify";
@@ -18,7 +14,6 @@ const Gallery = ({
   isPending,
   token,
   setLoginModalOpen,
-  openModal,
 }) => {
   const notify = (text) => toast(text);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,9 +23,8 @@ const Gallery = ({
   const [error, setError] = useState(null);
   const modalRef = useRef(null);
   const tagRef = useRef(null);
-  const [imageDropped, setImageDropped] = useState(null)
-  console.log(imageDropped)
- 
+  const [imageDropped, setImageDropped] = useState(null);
+
   const handleAddTag = () => {
     event.preventDefault();
     if (tagValue) {
@@ -80,15 +74,13 @@ const Gallery = ({
       </form>
     </div>
   );
-  const onReorder = (event, previousIndex, nextIndex, fromId, toId) => {
-    // console.log(previousIndex, nextIndex)
+  const onReorder = (previousIndex, nextIndex) => {
     if (token) {
       const items = Array.from(imageList);
       const [reorderedItem] = items.splice(previousIndex, 1);
-      // console.log(reorderedItem)
       items.splice(nextIndex, 0, reorderedItem);
       setImageList(items);
-      setImageDropped(images[previousIndex].id)
+      setImageDropped(images[previousIndex].id);
     } else {
       notify("Please login to drag n drop");
       setLoginModalOpen(true);
@@ -106,29 +98,22 @@ const Gallery = ({
           </div>
         ) : (
           <Reorder
-            className="w-full mt-2 md:mt-6 grid place-items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 gap-y-2 rounded-lg border drop-shadow-lg "
+            className="w-full mt-2 md:mt-6 grid place-items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 gap-y-2 rounded-lg border drop-shadow-lg fade-in "
             reorderId="my-list" // Unique ID that is used internally to track this list (required)
             reorderGroup="reorder-group" // A group ID that allows items to be dragged between lists of the same group (optional)
-            // getRef={this.storeRef.bind(this)} // Function that is passed a reference to the root node when mounted (optional)
-            component="div" // Tag name or Component to be used for the wrapping element (optional), defaults to 'div'
-            placeholderClassName="bg-slate-50 border-2 w-full h-full border-green-600" // Class name to be applied to placeholder elements (optional), defaults to 'placeholder'
+            placeholderClassName="bg-slate-50 border-2 w-full h-full border-green-600 opacity-30" // Class name to be applied to placeholder elements (optional), defaults to 'placeholder'
             draggedClassName="dragged border border-green-600 z-30 " // Class name to be applied to dragged elements (optional), defaults to 'dragged'
-            lock="" // Lock the dragging direction (optional): vertical, horizontal (do not use with groups)
             holdTime={100} // Default hold time before dragging begins (mouse & touch) (optional), defaults to 0
             touchHoldTime={70} // Hold time before dragging begins on touch devices (optional), defaults to holdTime
-            mouseHoldTime={90} // Hold time before dragging begins with mouse (optional), defaults to holdTime
+            mouseHoldTime={100} // Hold time before dragging begins with mouse (optional), defaults to holdTime
             onReorder={onReorder} // Callback when an item is dropped (you will need this to update your state)
-            autoScroll={true} // Enable auto-scrolling when the pointer is close to the edge of the Reorder component (optional), defaults to true
-            disabled={false} // Disable reordering (optional), defaults to false
-            disableContextMenus={true} // Disable context menus when holding on touch devices (optional), defaults to true
-            placeholder={
-              <div className="" /> // Custom placeholder element (optional), defaults to clone of dragged element
-            }
           >
             {images?.map((image, index) => (
               <div
                 key={index}
-                className={` relative w-[11rem] h-[11rem] sm:w-[15rem] sm:h-[15rem] md:w-[16rem]  md:h-[16rem] lg:w-[17rem] lg:h-[17rem] xl:w-[19rem] xl:h-[19rem] ${imageDropped ===image.id && 'shake'} `}
+                className={` relative w-[11rem] h-[11rem] sm:w-[15rem] sm:h-[15rem] md:w-[16rem]  md:h-[16rem] lg:w-[17rem] lg:h-[17rem] xl:w-[19rem] xl:h-[19rem] ${
+                  imageDropped === image.id && "shake"
+                } `}
               >
                 <img
                   src={image.url}

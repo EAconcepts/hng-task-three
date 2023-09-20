@@ -3,8 +3,8 @@ import React, { useState } from "react";
 const Modal = ({ isOpen, closeModal, children, modalRef}) => {
   // console.log(isOpen)
   const modalClasses = isOpen
-    ? "fixed inset-0 flex items-center justify-center z-50"
-    : "hidden";
+    ? "fixed inset-0 flex items-center justify-center z-50 fade-in-fast"
+    : "hidden ";
 
   return (
     <div className={modalClasses}>

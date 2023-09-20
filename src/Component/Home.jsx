@@ -174,7 +174,6 @@ const Home = () => {
       <Modal
         isOpen={loginModal}
         closeModal={() => setLoginModal(false)}
-        // modalRef={modalRef}
       >
         <Login
           setLoginModalOpen={setLoginModal}

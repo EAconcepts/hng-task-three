@@ -8,6 +8,12 @@
             backface-visibility: hidden;
             perspective: 1000px;
         }
+ .fade-in {
+     animation: fade-in 2s;
+ }
+  .fade-in-fast {
+      animation: fade-in 0.5s;
+  }
 
 
 @keyframes shake {
@@ -26,4 +32,17 @@
   40%, 60% {
     transform: translate3d(4px, 0, 0);
   }
+}
+
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+        transform: scale(50%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(100%);
+    }
 }
