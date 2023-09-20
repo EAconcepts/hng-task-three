@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { useState } from "react";
-import Reorder, {
-} from "react-reorder";
+import Reorder from "react-reorder";
 import PuffLoader from "react-spinners/PuffLoader";
 import { toast, ToastContainer } from "react-toastify";
 import "remixicon/fonts/remixicon.css";
@@ -74,13 +73,13 @@ const Gallery = ({
       </form>
     </div>
   );
-  const onReorder = (previousIndex, nextIndex) => {
+  const onReorder = (event, previousIndex, nextIndex) => {
     if (token) {
       const items = Array.from(imageList);
       const [reorderedItem] = items.splice(previousIndex, 1);
       items.splice(nextIndex, 0, reorderedItem);
       setImageList(items);
-      setImageDropped(images[previousIndex].id);
+      setImageDropped(imageList[previousIndex].id);
     } else {
       notify("Please login to drag n drop");
       setLoginModalOpen(true);
@@ -101,12 +100,17 @@ const Gallery = ({
             className="w-full mt-2 md:mt-6 grid place-items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 gap-y-2 rounded-lg border drop-shadow-lg fade-in "
             reorderId="my-list" // Unique ID that is used internally to track this list (required)
             reorderGroup="reorder-group" // A group ID that allows items to be dragged between lists of the same group (optional)
+            component="div"
             placeholderClassName="bg-slate-50 border-2 w-full h-full border-green-600 opacity-30" // Class name to be applied to placeholder elements (optional), defaults to 'placeholder'
             draggedClassName="dragged border border-green-600 z-30 " // Class name to be applied to dragged elements (optional), defaults to 'dragged'
+            lock=""
             holdTime={100} // Default hold time before dragging begins (mouse & touch) (optional), defaults to 0
             touchHoldTime={70} // Hold time before dragging begins on touch devices (optional), defaults to holdTime
             mouseHoldTime={100} // Hold time before dragging begins with mouse (optional), defaults to holdTime
             onReorder={onReorder} // Callback when an item is dropped (you will need this to update your state)
+            disabled={false}
+            autoScroll={true}
+            disableContextMenus={true} // Disable context menus when holding on touch devices (optional), defaults to true
           >
             {images?.map((image, index) => (
               <div
