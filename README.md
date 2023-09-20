@@ -1,8 +1,17 @@
-# React + Vite
+HNGx Stage Three Task
+Gallery App with drag and drop functionality
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Users can view images and search for images using their tag names
+Only authorized users (logged-in users) can re-arrange (using drag and drop), add and edit image tags
 
-Currently, two official plugins are available:
+Run 'npm install' to set up the project
+Run 'npm run dev' to start the localhost server
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project was created using -
+React + vite, 
+Firebase for user authentication
+Tailwindcss for styling, 
+React Re-order for drag and drop  
+React-toastify for alert pop-ups 
+React-spinners as loaders
+Remixicon for icons
