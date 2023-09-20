@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useState } from "react";
 import Reorder, {
   reorder,
@@ -7,7 +7,9 @@ import Reorder, {
   reorderFromToImmutable,
 } from "react-reorder";
 import PuffLoader from "react-spinners/PuffLoader";
-import {toast, ToastContainer} from 'react-toastify'
+import { toast, ToastContainer } from "react-toastify";
+import "remixicon/fonts/remixicon.css";
+import Modal from "./Modal";
 
 const Gallery = ({
   imageList,
@@ -16,8 +18,71 @@ const Gallery = ({
   isPending,
   token,
   setLoginModalOpen,
+  openModal,
 }) => {
   const notify = (text) => toast(text);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tagValue, setTagValue] = useState("");
+  const [imageId, setImageId] = useState(null);
+  const [editTag, setEditTag] = useState(false);
+  const [error, setError] = useState(null);
+  const modalRef = useRef(null);
+  const tagRef = useRef(null);
+  const clickOutside = (e) => {
+    const element = e.target;
+    if (isModalOpen && !modalRef.current.contains(element)) {
+      closeModal();
+    }
+  };
+  const handleAddTag = () => {
+    event.preventDefault();
+    if (tagValue) {
+      const update = imageList.map((item) => {
+        if (imageId === item.id) {
+          return { ...item, tag: tagValue };
+        }
+        return item;
+      });
+      setImageList(update);
+      notify("Successful!");
+      setTagValue("");
+      setEditTag(false);
+      setIsModalOpen(false);
+    } else {
+      setError("empty field!");
+      notify("Tag name cannot be empty");
+    }
+  };
+  const addNewTag = (
+    <div className="w-full flex flex-col items-center">
+      <h2 className="text-center font-mono font-semibold text-lg">
+        {" "}
+        {editTag ? <>Edit tag value</> : <>Add a new tag to Image</>}
+      </h2>
+      <form
+        onSubmit={handleAddTag}
+        className="w-full mt-4 flex flex-col items-center"
+      >
+        <input
+          ref={tagRef}
+          type="text"
+          value={tagValue}
+          autoFocus
+          maxLength="15"
+          onChange={(e) => {
+            setTagValue(e.target.value);
+            setError(null);
+          }}
+          className={`md:w-64 rounded border px-2 py-[2px] md:text-lg drop-shadow-lg focus-within:outline-none ${
+            error && "border-red-600"
+          }`}
+        />
+        <button className="md: mt-3 rounded border shadow-lg px-8 md:px-12 md:py-1 md:text-lg tracking-wider font-medium active:bg-slate-300 hover:bg-slate-500 hover:text-white hover:border-none">
+          {editTag ? <>Update</> : <>Add</>}
+        </button>
+      </form>
+    </div>
+  );
   const onReorder = (event, previousIndex, nextIndex, fromId, toId) => {
     // console.log(previousIndex, nextIndex)
     if (token) {
@@ -32,7 +97,6 @@ const Gallery = ({
     }
   };
   let images = searchResult ? searchResult : imageList;
-
   return (
     <div className="w-full">
       <ToastContainer />
@@ -64,21 +128,51 @@ const Gallery = ({
             }
           >
             {images?.map((image, index) => (
-              <div key={index} className=" relative w-36 h-36 sm:w-72 sm:h-72 border">
+              <div
+                key={index}
+                className=" relative w-36 h-36 sm:w-72 sm:h-72 border"
+              >
                 <img
                   src={image.url}
                   alt={`${image.tag} image`}
                   className="w-full h-full object-cover rounded"
                   loading="lazy"
                 />
-                <span className="absolute bottom-1 right-1 p- bg-gradient-to-t from-slate-200 rounded text-sm text-slate-800">
-                  #{image.tag}
-                </span>
+                {image.tag && image.tag.length > 0 ? (
+                  <span
+                    className="absolute bottom-1 right-1 p- bg-gradient-to-t from-slate-200 rounded text-sm text-slate-800"
+                    onClick={() => {
+                      setTagValue(image.tag);
+                      setEditTag(true);
+                      setImageId(image.id);
+                      setIsModalOpen(true);
+                    }}
+                  >
+                    #{image.tag}
+                  </span>
+                ) : (
+                  <i
+                    onClick={() => {
+                      // openModal
+                      setIsModalOpen(true);
+                      setImageId(image.id);
+                      tagRef.current.focus();
+                    }}
+                    className="ri-price-tag-3-line absolute bottom-1 right-1  text-base text-slate-600 md:text-2xl"
+                  ></i>
+                )}
               </div>
             ))}
           </Reorder>
         )}
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+        modalRef={modalRef}
+      >
+        {addNewTag}
+      </Modal>
     </div>
   );
 };

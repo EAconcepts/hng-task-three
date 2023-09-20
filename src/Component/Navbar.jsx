@@ -38,7 +38,9 @@ const Navbar = ({
       <ToastContainer />
       <nav className="w-full bg-white h-16 flex flex-row justify-between items-center py-2 px-3 lg:px-6 ">
         <div className="flex items-end gap-x-2">
-          <i className="ri-user-3-fill text-lg lg:text-4xl text-slate-600"></i>
+          <i 
+          onClick={()=>window.location.reload()} 
+          className="ri-user-3-fill text-lg lg:text-4xl text-slate-600"></i>
           <h3 className="hidden md:block text-sm lg:text-lg font-mono font-medium">
             {username}
           </h3>
