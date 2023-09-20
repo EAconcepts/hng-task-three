@@ -9,8 +9,10 @@ import "remixicon/fonts/remixicon.css";
 // import {PuffLoader} from 'react-spinners'
 
 const Home = () => {
-    const [token, setToken] = useState(sessionStorage.getItem('token') || null)
-    const [username, setUsername] = useState(sessionStorage.getItem("username") || null);
+  const [token, setToken] = useState(sessionStorage.getItem("token") || null);
+  const [username, setUsername] = useState(
+    sessionStorage.getItem("username") || null
+  );
   const [imageList, setImageList] = useState([
     {
       id: 1,
@@ -85,7 +87,7 @@ const Home = () => {
     {
       id: 15,
       url: "https://images.unsplash.com/photo-1556388158-158ea5ccacbd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YWlycG9ydHxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80",
-      tag: "avaition",
+      tag: "aviation",
     },
     {
       id: 16,
@@ -94,20 +96,20 @@ const Home = () => {
     },
   ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const[loginModal, setLoginModal] = useState(false)
+  const [loginModal, setLoginModal] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [filteredImages, setFilteredImages] = useState(null);
   const [isPending, setIsPending] = useState(false);
-  useEffect(()=>{
-    setIsPending(true)
+  useEffect(() => {
+    setIsPending(true);
     setTimeout(() => {
-        setIsPending(false)
+      setIsPending(false);
     }, 300);
-  },[])
+  }, []);
   const onSearchChange = () => {
-    event.preventDefault()
+    event.preventDefault();
     let text = event.target.value;
-    setSearchText( event.target.value);
+    setSearchText(event.target.value);
     setIsPending(true);
     setFilteredImages(
       imageList.filter((image) =>
@@ -145,23 +147,27 @@ const Home = () => {
     setIsModalOpen(false);
   };
 
-  let imageWithTags = imageList.filter((image)=>image.tag !=='' 
-)
-let tags = new Set(imageWithTags?.map((item)=>item.tag))
-  console.log(tags)
-  const allTags =(<div className="w-full flex flex-col gap-y-1 h-full px-4"> {[...tags]?.map((item,index) => (
-    <button key={item.index}
-     className="flex gap-x-2 capitalize"
-     onClick={()=>{
-        setSearchText(item)
-        handleSearchTag(item);
-        closeModal()
-     }}
-     >
-      <i className="ri-price-tag-3-line  text-base text-slate-600 md:text-2xl"></i>
-      {item}
-    </button>
-  ))}</div>);
+  let imageWithTags = imageList.filter((image) => image.tag !== "");
+  let tags = new Set(imageWithTags?.map((item) => item.tag));
+  const allTags = (
+    <div  className="w-full flex flex-col gap-y-1 h-full overflow-y-auto px-4">
+      {" "}
+      {[...tags]?.map((item, index) => (
+        <button
+          key={index}
+          className="flex gap-x-3 capitalize"
+          onClick={() => {
+            setSearchText(item);
+            handleSearchTag(item);
+            closeModal();
+          }}
+        >
+          <i className="ri-price-tag-3-line  text-base text-slate-600 md:text-2xl"></i>
+          {item}
+        </button>
+      ))}
+    </div>
+  );
   return (
     <div
       onClick={clickOutside}
@@ -196,9 +202,10 @@ let tags = new Set(imageWithTags?.map((item)=>item.tag))
             closeModal={closeModal}
             modalRef={modalRef}
           >
-           {allTags}
+            {allTags}
           </Modal>
         </div>
+        <h1 className="w-full text-center uppercase text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold font-mono tracking-widest ">Pictures Gallery</h1>
         <Gallery
           imageList={imageList}
           setImageList={setImageList}

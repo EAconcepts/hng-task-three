@@ -61,7 +61,7 @@ const Gallery = ({
       </h2>
       <form
         onSubmit={handleAddTag}
-        className="w-full mt-4 flex flex-col items-center"
+        className="w-full mt-5 flex flex-col items-center"
       >
         <input
           ref={tagRef}
@@ -73,11 +73,11 @@ const Gallery = ({
             setTagValue(e.target.value);
             setError(null);
           }}
-          className={`md:w-64 rounded border px-2 py-[2px] md:text-lg drop-shadow-lg focus-within:outline-none ${
+          className={`md:w-64 rounded border px-2 py-[2px] md:text-lg text-center drop-shadow-lg focus-within:outline-none ${
             error && "border-red-600"
           }`}
         />
-        <button className="md: mt-3 rounded border shadow-lg px-8 md:px-12 md:py-1 md:text-lg tracking-wider font-medium active:bg-slate-300 hover:bg-slate-500 hover:text-white hover:border-none">
+        <button className="md: mt-5 rounded border border-slate-500 shadow-lg px-8 md:px-12 py-1 md:py-1 md:text-lg tracking-wider font-medium active:bg-slate-300 hover:bg-slate-500 hover:text-white hover:border-none">
           {editTag ? <>Update</> : <>Add</>}
         </button>
       </form>
@@ -108,13 +108,13 @@ const Gallery = ({
           </div>
         ) : (
           <Reorder
-            className="w-full mt-2 md:mt-10 grid place-items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 rounded-lg border drop-shadow-lg"
+            className="w-full mt-2 md:mt-6 grid place-items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 gap-y-2 rounded-lg border drop-shadow-lg "
             reorderId="my-list" // Unique ID that is used internally to track this list (required)
-            reorderGroup="reorder-group" // A group ID that allows items to be dragged between lists of the same group (optional)
+            // reorderGroup="reorder-group" // A group ID that allows items to be dragged between lists of the same group (optional)
             // getRef={this.storeRef.bind(this)} // Function that is passed a reference to the root node when mounted (optional)
             component="div" // Tag name or Component to be used for the wrapping element (optional), defaults to 'div'
             placeholderClassName="border border-blue-600" // Class name to be applied to placeholder elements (optional), defaults to 'placeholder'
-            draggedClassName="dragged" // Class name to be applied to dragged elements (optional), defaults to 'dragged'
+            draggedClassName="dragged border mt-[33px] z-30 border-blue-500" // Class name to be applied to dragged elements (optional), defaults to 'dragged'
             lock="" // Lock the dragging direction (optional): vertical, horizontal (do not use with groups)
             holdTime={200} // Default hold time before dragging begins (mouse & touch) (optional), defaults to 0
             touchHoldTime={200} // Hold time before dragging begins on touch devices (optional), defaults to holdTime
@@ -130,7 +130,7 @@ const Gallery = ({
             {images?.map((image, index) => (
               <div
                 key={index}
-                className=" relative w-36 h-36 sm:w-72 sm:h-72 border"
+                className=" relative w-[11rem] h-[11rem] sm:w-[15rem] sm:h-[15rem] md:w-[16rem]  md:h-[16rem] lg:w-[17rem] lg:h-[17rem] xl:w-[19rem] xl:h-[19rem] "
               >
                 <img
                   src={image.url}
@@ -140,12 +140,17 @@ const Gallery = ({
                 />
                 {image.tag && image.tag.length > 0 ? (
                   <span
-                    className="absolute bottom-1 right-1 p- bg-gradient-to-t from-slate-200 rounded text-sm text-slate-800"
+                    className="absolute bottom-1 right-1 p- bg-gradient-to-t from-slate-900 to-transparent px-1 font-medium font-mono rounded text-sm text-slate-100"
                     onClick={() => {
-                      setTagValue(image.tag);
-                      setEditTag(true);
-                      setImageId(image.id);
-                      setIsModalOpen(true);
+                      if (token) {
+                        setTagValue(image.tag);
+                        setEditTag(true);
+                        setImageId(image.id);
+                        setIsModalOpen(true);
+                      } else {
+                        notify("Login to edit tags");
+                        setLoginModalOpen(true);
+                      }
                     }}
                   >
                     #{image.tag}
@@ -153,12 +158,18 @@ const Gallery = ({
                 ) : (
                   <i
                     onClick={() => {
-                      // openModal
-                      setIsModalOpen(true);
-                      setImageId(image.id);
-                      tagRef.current.focus();
+                      if (token) {
+                        setTagValue("");
+                        setEditTag(false);
+                        setIsModalOpen(true);
+                        setImageId(image.id);
+                        tagRef.current.focus();
+                      } else {
+                        notify("Login to add new tags");
+                        setLoginModalOpen(true);
+                      }
                     }}
-                    className="ri-price-tag-3-line absolute bottom-1 right-1  text-base text-slate-600 md:text-2xl"
+                    className="ri-price-tag-3-line absolute bottom-1 right-1 text-lg text-slate-100 pr-1 md:text-2xl"
                   ></i>
                 )}
               </div>
