@@ -28,12 +28,9 @@ const Gallery = ({
   const [error, setError] = useState(null);
   const modalRef = useRef(null);
   const tagRef = useRef(null);
-  const clickOutside = (e) => {
-    const element = e.target;
-    if (isModalOpen && !modalRef.current.contains(element)) {
-      closeModal();
-    }
-  };
+  const [imageDropped, setImageDropped] = useState(null)
+  console.log(imageDropped)
+ 
   const handleAddTag = () => {
     event.preventDefault();
     if (tagValue) {
@@ -53,7 +50,7 @@ const Gallery = ({
       notify("Tag name cannot be empty");
     }
   };
-  const addNewTag = (
+  const addTag = (
     <div className="w-full flex flex-col items-center">
       <h2 className="text-center font-mono font-semibold text-lg">
         {" "}
@@ -61,7 +58,7 @@ const Gallery = ({
       </h2>
       <form
         onSubmit={handleAddTag}
-        className="w-full mt-5 flex flex-col items-center"
+        className="w-full mt-5 lg:mt-8 flex flex-col items-center"
       >
         <input
           ref={tagRef}
@@ -77,7 +74,7 @@ const Gallery = ({
             error && "border-red-600"
           }`}
         />
-        <button className="md: mt-5 rounded border border-slate-500 shadow-lg px-8 md:px-12 py-1 md:py-1 md:text-lg tracking-wider font-medium active:bg-slate-300 hover:bg-slate-500 hover:text-white hover:border-none">
+        <button className="lg:mt-8 mt-5 rounded border border-slate-500 shadow-lg px-8 md:px-12 py-1 md:py-1 md:text-lg tracking-wider font-medium active:bg-slate-300 hover:bg-slate-500 hover:text-white hover:border-none">
           {editTag ? <>Update</> : <>Add</>}
         </button>
       </form>
@@ -91,6 +88,7 @@ const Gallery = ({
       // console.log(reorderedItem)
       items.splice(nextIndex, 0, reorderedItem);
       setImageList(items);
+      setImageDropped(images[previousIndex].id)
     } else {
       notify("Please login to drag n drop");
       setLoginModalOpen(true);
@@ -110,15 +108,15 @@ const Gallery = ({
           <Reorder
             className="w-full mt-2 md:mt-6 grid place-items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 gap-y-2 rounded-lg border drop-shadow-lg "
             reorderId="my-list" // Unique ID that is used internally to track this list (required)
-            // reorderGroup="reorder-group" // A group ID that allows items to be dragged between lists of the same group (optional)
+            reorderGroup="reorder-group" // A group ID that allows items to be dragged between lists of the same group (optional)
             // getRef={this.storeRef.bind(this)} // Function that is passed a reference to the root node when mounted (optional)
             component="div" // Tag name or Component to be used for the wrapping element (optional), defaults to 'div'
-            placeholderClassName="border border-blue-600" // Class name to be applied to placeholder elements (optional), defaults to 'placeholder'
-            draggedClassName="dragged border mt-[33px] z-30 border-blue-500" // Class name to be applied to dragged elements (optional), defaults to 'dragged'
+            placeholderClassName="bg-slate-50 border-2 w-full h-full border-green-600" // Class name to be applied to placeholder elements (optional), defaults to 'placeholder'
+            draggedClassName="dragged border border-green-600 z-30 " // Class name to be applied to dragged elements (optional), defaults to 'dragged'
             lock="" // Lock the dragging direction (optional): vertical, horizontal (do not use with groups)
-            holdTime={200} // Default hold time before dragging begins (mouse & touch) (optional), defaults to 0
-            touchHoldTime={200} // Hold time before dragging begins on touch devices (optional), defaults to holdTime
-            mouseHoldTime={200} // Hold time before dragging begins with mouse (optional), defaults to holdTime
+            holdTime={100} // Default hold time before dragging begins (mouse & touch) (optional), defaults to 0
+            touchHoldTime={70} // Hold time before dragging begins on touch devices (optional), defaults to holdTime
+            mouseHoldTime={90} // Hold time before dragging begins with mouse (optional), defaults to holdTime
             onReorder={onReorder} // Callback when an item is dropped (you will need this to update your state)
             autoScroll={true} // Enable auto-scrolling when the pointer is close to the edge of the Reorder component (optional), defaults to true
             disabled={false} // Disable reordering (optional), defaults to false
@@ -130,7 +128,7 @@ const Gallery = ({
             {images?.map((image, index) => (
               <div
                 key={index}
-                className=" relative w-[11rem] h-[11rem] sm:w-[15rem] sm:h-[15rem] md:w-[16rem]  md:h-[16rem] lg:w-[17rem] lg:h-[17rem] xl:w-[19rem] xl:h-[19rem] "
+                className={` relative w-[11rem] h-[11rem] sm:w-[15rem] sm:h-[15rem] md:w-[16rem]  md:h-[16rem] lg:w-[17rem] lg:h-[17rem] xl:w-[19rem] xl:h-[19rem] ${imageDropped ===image.id && 'shake'} `}
               >
                 <img
                   src={image.url}
@@ -140,7 +138,7 @@ const Gallery = ({
                 />
                 {image.tag && image.tag.length > 0 ? (
                   <span
-                    className="absolute bottom-1 right-1 p- bg-gradient-to-t from-slate-900 to-transparent px-1 font-medium font-mono rounded text-sm text-slate-100"
+                    className="absolute bottom-1 right-1 p-1 bg-gradient-to-t from-slate-900 to-transparent px-2 font-medium font-mono rounded text-sm text-slate-100 hover:cursor-pointer z-20"
                     onClick={() => {
                       if (token) {
                         setTagValue(image.tag);
@@ -169,7 +167,7 @@ const Gallery = ({
                         setLoginModalOpen(true);
                       }
                     }}
-                    className="ri-price-tag-3-line absolute bottom-1 right-1 text-lg text-slate-100 pr-1 md:text-2xl"
+                    className="ri-price-tag-3-line absolute bottom-1 right-1 text-lg text-slate-100 pr-1 md:text-2xl hover:cursor-pointer z-20"
                   ></i>
                 )}
               </div>
@@ -182,7 +180,7 @@ const Gallery = ({
         closeModal={() => setIsModalOpen(false)}
         modalRef={modalRef}
       >
-        {addNewTag}
+        {addTag}
       </Modal>
     </div>
   );

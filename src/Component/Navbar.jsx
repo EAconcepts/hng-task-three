@@ -33,6 +33,7 @@ const Navbar = ({
         notify("couldn't sign out!");
       });
   };
+
   return (
     <>
       <ToastContainer />

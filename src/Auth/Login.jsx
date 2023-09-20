@@ -19,10 +19,14 @@ const Login = ({ setLoginModalOpen, setToken, setUsername }) => {
     setUser((values) => ({ ...values, [name]: value }));
     setError("");
   };
-  console.log(isPending);
   const handleSignIn = (event) => {
     event.preventDefault();
     setIsPending(true);
+    if(!user.email && !user.password){
+        notify("Email and password cannot be empty")
+    }else if(!user.email || !user.password){
+        notify("Please fill all fields")
+    } else{
     signInWithEmailAndPassword(auth, user.email, user.password)
       .then((userCredential) => {
         if (userCredential.user) {
@@ -46,6 +50,7 @@ const Login = ({ setLoginModalOpen, setToken, setUsername }) => {
         setError(errorCode);
         setIsPending(false);
       });
+    }
   };
 
   return (

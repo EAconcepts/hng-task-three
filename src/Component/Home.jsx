@@ -6,8 +6,6 @@ import { useEffect } from "react";
 import Login from "../Auth/Login";
 import "remixicon/fonts/remixicon.css";
 
-// import {PuffLoader} from 'react-spinners'
-
 const Home = () => {
   const [token, setToken] = useState(sessionStorage.getItem("token") || null);
   const [username, setUsername] = useState(
